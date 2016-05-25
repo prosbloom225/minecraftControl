@@ -12,7 +12,7 @@ echo "Starting $1"
 cd $1
 JAR=`ls | grep 'forge.*\.jar\|FTBServer.*\.jar'`
 echo "jar: $JAR"
-java -jar -server -Xms512M -Xmx2048M -XX:MaxPermSize=256M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -jar $JAR nogui > /dev/null &
+java -jar -server -Xms1024M -Xmx4096M -XX:MaxPermSize=256M -XX:+UseG1GC -XX:+CMSIncrementalPacing -XX:+CMSClassUnloadingEnabled -XX:ParallelGCThreads=2 -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -jar $JAR nogui > /dev/null &
 echo $! > ../run/$1.pid
 }
 
@@ -34,11 +34,20 @@ else
 fi
 }
 
+function clear_locks() {
+echo "Clearing locks"
+cd ./run
+rm -rf *.pid
+echo "Locks cleared"
+}
+
 
 if [ "$1" == "start" ]; then
     start $2
 elif [ "$1" == "stop" ]; then
     stop $2
+elif [ "$1" == "clear_locks" ]; then
+    clear_locks
 else
     echo "Please pass a valid command"
 fi
